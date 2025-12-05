@@ -4,6 +4,7 @@
 
 import customtkinter as ctk
 from PageManager import PageManager
+from DatabaseManager import DatabaseManager
 
 # from FILE import CLASS
 
