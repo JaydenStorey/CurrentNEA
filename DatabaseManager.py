@@ -1,16 +1,45 @@
 # IMPORT LIBRARIES
 
 import sqlite3
+import hashlib
 
 class DatabaseManager:
     def __init__(self):
         self.databaseName = "NEADatabase.db"
 
-    def CreateAccount(self, firstName, lastName, email, password):
-        error = False
-        patternForEmail = r'[^@]+@[^@]+\.[^@]+'
+    def HashString(self,string):
+        hashstring = hashlib.sha512(string.encode()).hexdigest()
+        for i in range(6):
+            hashstring = hashlib.sha512(hashstring.encode()).hexdigest()
+        
+        # For debugging
+        print(hashstring)
+        return hashstring
 
-
+    def GetHashedPasswordFromEmail(self,email):
+        database = sqlite3.connect(self.databaseName)
+        cursor = database.cursor()
+        cursor.execute("SELECT * FROM AccountInformation WHERE EmailAddress=?", (email,))
+        if cursor.fetchone() == None:
+            print("Email was not found. Returning none.")
+            return None
+        else:
+            cursor.execute("SELECT Password FROM AccountInformation where EmailAddress = ?", (email,))
+            DatabasePassword = cursor.fetchone()[0]
+            database.close()
+            if DatabasePassword != None:
+                return DatabasePassword
+            else:
+                print("Error occurred, password was not found. Returning none")
+                return None
+             
+    def GetHighestUserID(self):
+        database = sqlite3.connect(self.databaseName)
+        cursor = database.cursor()
+        cursor.execute("SELECT MAX(UserID) FROM AccountInformation")
+        userid = cursor.fetchone()[0]
+        database.close()
+        return userid
 
 
 
