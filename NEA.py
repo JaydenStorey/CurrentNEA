@@ -45,11 +45,15 @@ def GoToLastPage(PageManager):
 
 # Create account and login functions #
 
-def CreateAccount():
-    pass
+def CreateAccount(FirstName,LastName,Email,Password):
+    HighestUserID = DatabaseManager.GetHighestUserID()
+    if HighestUserID == None:
+        HighestUserID = 1
 
-def CheckLogin():
-    pass
+
+
+def CheckLogin(Email,EncryptedPassword):
+    
 
 
 class StartPage(ctk.CTkFrame):
